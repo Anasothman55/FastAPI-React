@@ -1,5 +1,6 @@
 import datetime as _dt
 import pydantic as _pyd
+from pydantic import EmailStr,Field
 
 class _UserSchemaBase(_pyd.BaseModel):
   email : _pyd.EmailStr
@@ -18,9 +19,9 @@ class _UserSchema(_UserSchemaBase):
 #? Leads Schemas
 
 class _LeadsBaseSchema(_pyd.BaseModel):
-  first_name: str
+  first_name: str = Field(min_length=3)
   last_name: str
-  email: str
+  email: EmailStr
   company: str
   note: str
   class Config:

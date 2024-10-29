@@ -5,15 +5,25 @@ import sqlalchemy.orm as _orm
 import services as _services,schemas as _schemas
 import models as _models
 from typing import List
+from fastapi.middleware.cors import CORSMiddleware
 
 app = _fastapi.FastAPI()
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],  # Add your React dev server URL
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 @app.post("/api/users")
 async def create_user(users: _schemas._UserCreateSchema, db:_orm.Session = _fastapi.Depends(_services.get_db)):
   db_user = await _services.get_user_by_email(users.email, db)
   if db_user:
     raise HTTPException(status_code=400, detail="Email already in use")
-  await _services.craete_user(users,db)
+  users = await _services.craete_user(users,db)
   return await _services.create_token(users)
 
 @app.post("/api/token")
@@ -68,4 +78,4 @@ async def update_lead(lead_id: int, lead_put: _schemas._LeadsCreateSchemas, db: 
 
 @app.get("/api")
 async def root():
-  return {"message":"api fro leads manager"}
+  return {"message":"api fro leads manager change"}

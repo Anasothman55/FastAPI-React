@@ -8,9 +8,6 @@ import jwt as _jwt
 import fastapi as _fastapi
 import fastapi.security as _security
 import datetime as _dt
-
-
-
 JWT_SECRET = "myjwtsecrit"
 
 oauth2Schema = _security.OAuth2PasswordBearer(tokenUrl="/api/token")
@@ -68,7 +65,7 @@ async def craete_lead(user:_schemas._UserSchema,db:_orm.Session,lead:_schemas._L
   return _schemas._LeadsSchema.from_orm(lead)
 
 async def get_Leads(user:_schemas._UserSchema,db:_orm.Session):
-  lead = db.query(_model.Lead).filter_by(user_id= user.id)
+  lead = db.query(_model.Lead).filter_by(user_id= user.id).order_by(_model.Lead.date_last_updated.desc()).all()
   return list(
     map(_schemas._LeadsSchema.from_orm, lead)
   )
