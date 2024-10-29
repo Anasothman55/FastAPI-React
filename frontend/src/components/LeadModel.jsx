@@ -35,6 +35,7 @@ function LeadModel({active,handlemodel,token,id, setErrorMessage}) {
       handlemodel()
     }
   }
+  
 
   useEffect(()=>{
     const getLead = async ()=>{
